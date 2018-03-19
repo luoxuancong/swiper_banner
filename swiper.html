@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<title>swiper视频demo</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css">
+	<style>
+		.banner-container{width: 1366px; height: 700px;margin: 0 auto;position: relative;}
+		.banner-container .swiper-slide *{height: 100%;width: 100%;}
+	</style>
+</head>
+<body>
+<div class="swiper-container banner-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide"><a href=""><img src="http://static.home.baidu.com/homebd/ibeackmhjlndfg1519371615.jpg?authorization=bce-auth-v1%2Fe6803def36ae467f81ebdb4bdc75f119%2F2018-02-23T07%3A40%3A15Z%2F-1%2F%2Fb53efaa5ba52b55bc5472d707a2e5a36f2706ceccfbada0d8c9d742cb70f4bc5" alt=""></a></div>
+        <div class="swiper-slide"><video src="https://www.tencent.com/video/video1.mp4" preload=""></video></div>
+        <div class="swiper-slide"><a href=""><img src="http://static.home.baidu.com/homebd/ibeackmhjlndfg1519371615.jpg?authorization=bce-auth-v1%2Fe6803def36ae467f81ebdb4bdc75f119%2F2018-02-23T07%3A40%3A15Z%2F-1%2F%2Fb53efaa5ba52b55bc5472d707a2e5a36f2706ceccfbada0d8c9d742cb70f4bc5" alt=""></a></div>
+        <div class="swiper-slide"><video src="https://www.tencent.com/video/video1.mp4" preload=""></video></div>
+    </div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+</div>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.min.js"></script>
+<script>
+
+	var Swiper1 = new Swiper('.banner-container', {
+	    pagination: '.swiper-pagination',
+	    paginationClickable: true,
+	    nextButton: '.swiper-button-next',
+	    prevButton: '.swiper-button-prev',
+	    observer:true,
+	    observeParents:true,
+	    autoplay:3500,
+	    loop:true,
+	    speed:800,
+	    onSlideChangeStart: function(Swiper1){
+	        // 暂停所有视频
+	         var videos = document.getElementsByTagName('video');
+	            for (var i = videos.length - 1; i >= 0; i--) {
+	                (function(){
+	                    var p = i;
+	                    videos[p].addEventListener('play',function(){
+	                        pauseAll(p);
+	                    })
+	                })()
+	            }
+	            function pauseAll(index){
+	                for (var j = videos.length - 1; j >= 0; j--) {
+	                    if (j!=index) videos[j].pause();
+	                }
+	            };
+	        // 判断swiper-slide-active是否有视频
+	        if($(".banner-container .swiper-slide-active video").length>0){
+	            // 停止自动切换
+	            Swiper1.stopAutoplay();
+	            // 动态增加id
+	            $(".banner-container .swiper-slide-active video").attr("id","video_01");
+	            var _video=document.getElementById("video_01");
+	            // 播放视频
+	            _video.play();
+	
+	            // 切换后重新播放视频
+	            _video.currentTime = 0;
+	            // 静音
+	            _video.volume = 0;
+	            // 监听视频播放结束
+	            _video.addEventListener('ended', function () {  
+
+	                Swiper1.slideNext();
+
+	                //重新开始轮播banner
+	                
+	                Swiper1.startAutoplay();
+	            });
+	        }
+	    },
+	    onSlideChangeEnd: function(Swiper1){
+	        //动态移除id
+	        $(".banner-container .swiper-slide-active video").attr("id","");
+	    }
+	});
+
+
+</script>
+</body>
+</html>
